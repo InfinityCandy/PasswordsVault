@@ -16,6 +16,7 @@ class StoreNewPassword(QMainWindow):
         #This method is executed when the class's object is created
         self.drawWindow()
 
+    #Draws the screen to store a new password
     def drawWindow(self):
         #Draws label and text box for site's name
         sitenNamelabel = QLabel(self)
@@ -65,7 +66,6 @@ class StoreNewPassword(QMainWindow):
     #Check if all the fields were filled if not returns false
     #@return false/true: Return a boolean value, True if all the fields were filled or False otherwise
     def checkFieldsValues(self):
-        #print(self.siteNameTxtBox.text())
         validInput = False
         if((self.siteNameTxtBox.text() == "") or (self.emailOrUserTextbox.text() == "") or (self.passwordTextBox.text() == "") or (self.confirmPasswordTextBox.text() == "")):
             error = QMessageBox()
@@ -81,7 +81,7 @@ class StoreNewPassword(QMainWindow):
             validInput = True
             return validInput
             
-    
+    #Function that triggers when the store password button is clicked
     def storePassword(self):
         if(self.checkFieldsValues()):
             passwordsOpert = passwordsOperator.PasswordsOperator()

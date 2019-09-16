@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QPushButton, QMainWindow
 
-from storeNewPassword import StoreNewPassword
+import storeNewPassword
 
 class MainScreen(QMainWindow):
     def __init__(self):
@@ -21,7 +21,7 @@ class MainScreen(QMainWindow):
     #Methods
     def drawWindow(self):
         storeNewPaswordbtn = QPushButton('Store New password', self)
-        storeNewPaswordbtn.clicked.connect(self.storeNewPassword)
+        storeNewPaswordbtn.clicked.connect(self.storePassword)
         storeNewPaswordbtn.resize(self.buttonWidth, self.buttonHeigh)
         storeNewPaswordbtn.move(self.MarginButtonsLeft, self.MarginButtonsTop) 
 
@@ -41,9 +41,8 @@ class MainScreen(QMainWindow):
         self.setWindowTitle('PasswordsVault')    
         self.show()
 
-    def storeNewPassword(self):
-        self.storeNewPasswordScreen = StoreNewPassword()
-        self.storeNewPasswordScreen.show()
+    def storePassword(self):
+        self.storeNewPasswordScreen = storeNewPassword.StoreNewPassword()
 
         #Close the current window
         self.close()

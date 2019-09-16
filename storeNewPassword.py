@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QLineEdit, QLabel, QMessageBox
 
-from passwordsOperator import PasswordsOperator
+import passwordsOperator
+import mainScreen
 
 
 class StoreNewPassword(QMainWindow):
@@ -83,8 +84,9 @@ class StoreNewPassword(QMainWindow):
     
     def storePassword(self):
         if(self.checkFieldsValues()):
-            passwordsOperator = PasswordsOperator()
-            passwordsOperator.storePassword(self.siteNameTxtBox.text(), self.emailOrUserTextbox.text(), self.passwordTextBox.text())
+            passwordsOpert = passwordsOperator.PasswordsOperator()
+            passwordsOpert.storePassword(self.siteNameTxtBox.text(), self.emailOrUserTextbox.text(), self.passwordTextBox.text())
 
-            mainScreen = storeNewPassword.MainScreen()
+            self.mainScr = mainScreen.MainScreen()
+            self.close()
         

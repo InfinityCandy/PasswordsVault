@@ -1,10 +1,11 @@
 import crypt
 import os
 
-
 class PasswordsOperator:
+    filePath = "StoredPasswords/Passwords.txt"
+
     def storePassword(self, site, emailOrUser, password):
-        passwordsFile = open("Passwords.txt", "w")
+        passwordsFile = open(filePath, "w")
         passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + crypt.crypt(password, "encrypt"))
         passwordsFile.close()
 

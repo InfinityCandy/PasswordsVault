@@ -14,9 +14,14 @@ class PasswordsOperator:
         #In thtat contianer folder is where we are going to store our passwords file
         if not os.path.exists(self.containerDirectory):
             os.makedirs(self.containerDirectory)
+            
+            passwordsFile = open(self.containerDirectory + self.fileName, "w")
+            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + crypt.crypt(password, "encrypt") + "\r\n")
+            passwordsFile.close()
 
-        #We validate if the file where the passwords are stored exists
-        #If not exists then we create a new file with the first password
+
+            #We validate if the file where the passwords are stored exists
+            #If not exists then we create a new file with the first password
         elif not os.path.exists(self.containerDirectory + self.fileName):
             passwordsFile = open(self.containerDirectory + self.fileName, "w")
             passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + crypt.crypt(password, "encrypt") + "\r\n")

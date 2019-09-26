@@ -55,6 +55,19 @@ class SearchPassword(QMainWindow):
         self.setWindowTitle("Search Password")    
         self.show()
 
+    #Check if all the fields were filled if not returns false
+    #@return false/true: Return a boolean value, True if all the fields were filled or False otherwise
+    def checkFieldsValues(self):
+        validInput = False
+
+        if(self.searchPasswordTxtBox.text() == ""):
+            error = QMessageBox()
+            error.setText("Introduce a value as a reference for the search")
+            error.exec_()
+        else:
+            validInput = True
+            
+            return validInput
 
     #Function that allows the user to go back to the main screen
     def goBack(self):
@@ -62,20 +75,21 @@ class SearchPassword(QMainWindow):
         self.close()
 
     def searchForPassword(self):
-        passwordsOpert = passwordsOperator.PasswordsOperator()
+        if(self.checkFieldsValues()):
+            passwordsOpert = passwordsOperator.PasswordsOperator()
 
-        passwordSearchResult = passwordsOpert.searchPassword(self.searchOptionsComboBox.currentText(), self.searchPasswordTxtBox.text())
+            passwordSearchResult = passwordsOpert.searchPassword(self.searchOptionsComboBox.currentText(), self.searchPasswordTxtBox.text())
 
-        #In case the file or folder where the passwords are stored doesn't exists, then we get a 404 error from the method above
-        if(passwordSearchResult == "404"):
-            error = QMessageBox()
-            error.setText("There's no passwords stored")
-            error.exec_()
-        elif (passwordSearchResult == "405"):
-            error = QMessageBox()
-            error.setText("No password found for that Site or UserName/Email")
-            error.exec_()
-        else:
-            self.showPasswordInfoScr = showPasswordInfo.ShowPasswordInfo(passwordSearchResult)
-            self.close()
+            #In case the file or folder where the passwords are stored doesn't exists, then we get a 404 error from the method above
+            if(passwordSearchResult == "404"):
+                error = QMessageBox()
+                error.setText("There's no passwords stored")
+                error.exec_()
+            elif (passwordSearchResult == "405"):
+                error = QMessageBox()
+                error.setText("No password found for that Site or UserName/Email")
+                error.exec_()
+            else:
+                self.showPasswordInfoScr = showPasswordInfo.ShowPasswordInfo(passwordSearchResult)
+                self.close()
             

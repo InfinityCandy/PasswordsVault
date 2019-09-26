@@ -137,8 +137,51 @@ class PasswordsOperator:
                 else:
                     return "404"
 
+    def deletePassword(self, emailUserName):
+        if(self.validatePasswordsFilesExistance()):
+            passwordsFile = open(self.containerDirectory + self.fileName, "r")
+
+            if(passwordsFile.mode == "r"):
+                passwordsInfoArray = []
+
+                fileContent = passwordsFile.read()
+
+                #We first clean the content from white spaces
+                fileContent = fileContent.replace(" ", "")
+                #We split every password information, each one of them are stores separated by new lines
+                fileContent = fileContent.split("\n")
+
+                #We create a flag to know if we successfully updated the password
+                passwordDeleted = False
+                newFileContent = ""
+
+                #We use "-1" in our for cicle to avoid adding and empty new line to the array
+                for i in range(len(fileContent) - 1):
+                    passwordsInfoArray = fileContent[i].split("-")
+                    
+                    #We split the value of Email/UserName
+                    emailUserNameMap = passwordsInfoArray[1].split(":")
+                    #We take the second value from the element in the array, which corresponds to the "Emial/UserName" value
+                    emailUserNameValue = emailUserNameMap[1]
+
+                    #For every value that doesn't match we add it to the the new file content
+                    if(emailUserNameValue != emailUserName):
+                        newFileContent = newFileContent + ("-".join(passwordsInfoArray)) + "\r\n"
+                        passwordDeleted = True
+
                 
-        
+                #If we could update the password by finding the Email/UserName associated to it, we write a new file, overwriting the old one, with the new information
+                #And we return a status of 200
+                if(passwordDeleted):
+                    passwordsFile = open(self.containerDirectory + self.fileName, "w")
+                    passwordsFile.write(newFileContent)
+                    passwordsFile.close()
+                    
+                    return "200"
+                else:
+                    return "404"
+
+                
     def validatePasswordsFilesExistance(self):
         #If the directory or file where the passwords are stored doesn't exist we return "404"
         if not os.path.exists(self.containerDirectory):

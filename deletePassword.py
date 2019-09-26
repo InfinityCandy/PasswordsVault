@@ -3,18 +3,17 @@ from PyQt5.QtWidgets import QPushButton, QMainWindow, QLabel, QLineEdit, QMessag
 import mainScreen
 import passwordsOperator
 
-class UpdatePassword(QMainWindow):
+class DeletePassword(QMainWindow):
     def __init__(self):
         super().__init__()
 
         #Attributes
         self.windowWidth = 200
-        self.windowHeigh = 340
+        self.windowHeigh = 200
 
 
         #This method is executed when the class's object is created
         self.drawWindow()
-
 
     #Draws the screen to store a new password
     def drawWindow(self):
@@ -42,31 +41,11 @@ class UpdatePassword(QMainWindow):
         self.confirmUserTextBox.resize(165, 25)
         self.confirmUserTextBox.move(20, 125)
 
-        #Draws label and textbox for the new password
-        newPasswordLabel = QLabel(self)
-        newPasswordLabel.setText("New Password")
-        newPasswordLabel.setFixedSize(165, 25)
-        newPasswordLabel.move(20, 165)
-        self.newPasswordTextBox = QLineEdit(self)
-        self.newPasswordTextBox.setEchoMode(QLineEdit.Password)
-        self.newPasswordTextBox.resize(165, 25)
-        self.newPasswordTextBox.move(20, 190)
-
-        #Draws label and textbox for confirm password
-        confirmNewPasswordLable = QLabel(self)
-        confirmNewPasswordLable.setText("Confirm New Password")
-        confirmNewPasswordLable.setFixedSize(165, 25)
-        confirmNewPasswordLable.move(20, 230)
-        self.confirmPasswordTextBox = QLineEdit(self)
-        self.confirmPasswordTextBox.setEchoMode(QLineEdit.Password)
-        self.confirmPasswordTextBox.resize(165, 25)
-        self.confirmPasswordTextBox.move(20, 255)
-
         #Draws the button to search password by Email/UserName
-        updatePasswordbtn = QPushButton("Update Password", self)
-        updatePasswordbtn.clicked.connect(self.updateStoredPassword)
-        updatePasswordbtn.resize(165, 25)
-        updatePasswordbtn.move(20, 295)
+        deletePasswordbtn = QPushButton("Delete Password", self)
+        deletePasswordbtn.clicked.connect(self.deleteStoredPassword)
+        deletePasswordbtn.resize(165, 25)
+        deletePasswordbtn.move(20, 160)
 
         #Draws the window
         self.setGeometry(200, 200, self.windowWidth, self.windowHeigh)
@@ -81,7 +60,7 @@ class UpdatePassword(QMainWindow):
     def checkFieldsValues(self):
         validInput = False
 
-        if(self.searchUserPasswordTextBox.text() == "" or self.confirmUserTextBox.text() == "" or self.newPasswordTextBox.text() == "" or self.confirmPasswordTextBox.text() == ""):
+        if(self.searchUserPasswordTextBox.text() == "" or self.confirmUserTextBox.text() == ""):
             error = QMessageBox()
             error.setText("Fill all fields")
             error.exec_()
@@ -95,30 +74,24 @@ class UpdatePassword(QMainWindow):
 
             return validInput
 
-        elif(self.newPasswordTextBox.text() != self.confirmPasswordTextBox.text()):
-            error = QMessageBox()
-            error.setText("The new passwords doesn't match")
-            error.exec_()
-
-            return validInput
         else:
             validInput = True
 
             return validInput
 
-    def updateStoredPassword(self):
+    def deleteStoredPassword(self):
         if(self.checkFieldsValues()):
             passwordsOpert = passwordsOperator.PasswordsOperator()
 
-            passwordUpdateResult = passwordsOpert.updatePassword(self.searchUserPasswordTextBox.text(), self.newPasswordTextBox.text())
+            passwordDeleteResult = passwordsOpert.deletePassword(self.searchUserPasswordTextBox.text())
 
-            if(passwordUpdateResult == "404"):
+            if(passwordDeleteResult == "404"):
                 error = QMessageBox()
                 error.setText("Email/UserName didn't find")
                 error.exec_()
             else:
                 success = QMessageBox()
-                success.setText("Password updated successfully!")
+                success.setText("Password deleted successfully!")
                 success.exec_()
 
                 self.mainScr = mainScreen.MainScreen()

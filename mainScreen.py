@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QPushButton, QMainWindow
 import storeNewPassword
 import searchPassword
 import updatePassword
+import deletePassword
 
 class MainScreen(QMainWindow):
     #Constructor
@@ -36,6 +37,7 @@ class MainScreen(QMainWindow):
         updatePasswordbtn.move(20, 82)
 
         deletePasswotdbtn = QPushButton('Delete password', self)
+        deletePasswotdbtn.clicked.connect(self.deleteStoredPassword)
         deletePasswotdbtn.resize(165, 32)
         deletePasswotdbtn.move(215, 82)
         
@@ -58,6 +60,12 @@ class MainScreen(QMainWindow):
 
     def updateStoredPassword(self):
         self.updateStoredPasswordScreen = updatePassword.UpdatePassword()
+
+        #Close the current window
+        self.close()
+
+    def deleteStoredPassword(self):
+        self.deleteStoredPasswordScreen = deletePassword.DeletePassword()
 
         #Close the current window
         self.close()

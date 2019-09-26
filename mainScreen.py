@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QPushButton, QMainWindow
 
 import storeNewPassword
 import searchPassword
+import updatePassword
 
 class MainScreen(QMainWindow):
     #Constructor
@@ -30,6 +31,7 @@ class MainScreen(QMainWindow):
         searchPasswordbtn.move(215, 40)
 
         updatePasswordbtn = QPushButton('Update password', self)
+        updatePasswordbtn.clicked.connect(self.updateStoredPassword)
         updatePasswordbtn.resize(165, 32)
         updatePasswordbtn.move(20, 82)
 
@@ -50,6 +52,12 @@ class MainScreen(QMainWindow):
 
     def searchForPassword(self):
         self.searchPasswordScreen = searchPassword.SearchPassword()
+
+        #Close the current window
+        self.close()
+
+    def updateStoredPassword(self):
+        self.updateStoredPasswordScreen = updatePassword.UpdatePassword()
 
         #Close the current window
         self.close()

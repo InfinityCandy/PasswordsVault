@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QMessageBox
-import crypt
 import os
 
 class PasswordsOperator:
@@ -14,19 +13,24 @@ class PasswordsOperator:
         #In thtat contianer folder is where we are going to store our passwords file
         if not os.path.exists(self.containerDirectory):
             os.makedirs(self.containerDirectory)
+            
+            passwordsFile = open(self.containerDirectory + self.fileName, "w")
+            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
+            passwordsFile.close()
 
-        #We validate if the file where the passwords are stored exists
-        #If not exists then we create a new file with the first password
+
+            #We validate if the file where the passwords are stored exists
+            #If not exists then we create a new file with the first password
         elif not os.path.exists(self.containerDirectory + self.fileName):
             passwordsFile = open(self.containerDirectory + self.fileName, "w")
-            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + crypt.crypt(password, "encrypt") + "\r\n")
+            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
             passwordsFile.close()
 
         #If the file exist then we append the new password to the end of it
         else:
             #We append the new password to the password's file
             passwrodsFile = open(self.containerDirectory + self.fileName, "a+")
-            passwrodsFile.write("Site Name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + crypt.crypt(password, "encrypt") + "\r\n")
+            passwrodsFile.write("Site Name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
         
 
         succesAlert = QMessageBox()
@@ -49,8 +53,8 @@ class PasswordsOperator:
                 fileContent = fileContent.split("\n")
 
                 #We use "-1" in our for cicle to avoid adding and empty new line to the array
-                for passwordInfo in range(len(fileContent) - 1):
-                    passwordsInfoArray.append(fileContent[passwordInfo].split("-"))
+                for i in range(len(fileContent) - 1):
+                    passwordsInfoArray.append(fileContent[i].split("-"))
                 
                 #We define the index that we are going to use to search in the passwordsInfoArray
                 #The index is defined by the value selected by the user on the searchPasswordScreen's combobox
@@ -60,7 +64,7 @@ class PasswordsOperator:
                     searchByIndex = 1
                 
                 #Variable where the searched password is going to be stored
-                passwordInfoFound = ""
+                passwordInfoFound = []
 
                 #We iterate throw every element in the passwordsInfoArray
                 for passwordInfo in passwordsInfoArray:
@@ -71,19 +75,68 @@ class PasswordsOperator:
                     arrayValue = arrayValue[1]
 
                     #If we found any value that match, we join every element in the array where is that value, using "-" to separate each value
+                    #And qe append the password String to the array
                     if(arrayValue == valueToSearch):
-                        passwordInfoFound = "-".join(passwordInfo)
+                        passwordInfoFound.append(passwordInfo)
 
-                #If the variable, where we were going to store the password once we found it, is setted to it's default vaule
+                #If the variable, where we were going to store the passwords once we found them has a length value of "0"
                 #That means that we didn't find any password that match, so we return "405"
-                if(passwordInfoFound == ""):
+                if(len(passwordInfoFound) == 0):
                     return "405"
-                #if we find the password we just return it as a string
+                #If we find the password/s we just return it as a string
                 else:
                     return passwordInfoFound
         
         else:
             return "404"
+
+    def updatePassword(self, emailUserName, newPassword):
+        if(self.validatePasswordsFilesExistance()):
+            passwordsFile = open(self.containerDirectory + self.fileName, "r")
+
+            if(passwordsFile.mode == "r"):
+                passwordsInfoArray = []
+
+                fileContent = passwordsFile.read()
+
+                #We first clean the content from white spaces
+                fileContent = fileContent.replace(" ", "")
+                #We split every password information, each one of them are stores separated by new lines
+                fileContent = fileContent.split("\n")
+
+                #We create a flag to know if we successfully updated the password
+                passwordUpdate = False
+                newFileContent = ""
+
+                #We use "-1" in our for cicle to avoid adding and empty new line to the array
+                for i in range(len(fileContent) - 1):
+                    passwordsInfoArray = fileContent[i].split("-")
+                    
+                    #We split the value of Email/UserName
+                    emailUserNameMap = passwordsInfoArray[1].split(":")
+                    #We take the second value from the element in the array, which corresponds to the "Emial/UserName" value
+                    emailUserNameValue = emailUserNameMap[1]
+
+                    #If we found any value that match, we join every element in the array where is that value, using "-" to separate each value
+                    #And qe append the password String to the array
+                    if(emailUserNameValue == emailUserName):
+                        passwordsInfoArray[2] = "Password: " + newPassword
+                        passwordUpdate = True
+
+                    #We create a new string which containes the new text in the file
+                    newFileContent = newFileContent + ("-".join(passwordsInfoArray)) + "\r\n"
+
+                #If we could update the password by finding the Email/UserName associated to it, we write a new file, overwriting the old one, with the new information
+                #And we return a status of 200
+                if(passwordUpdate):
+                    passwordsFile = open(self.containerDirectory + self.fileName, "w")
+                    passwordsFile.write(newFileContent)
+                    passwordsFile.close()
+                    
+                    return "200"
+                else:
+                    return "404"
+
                 
         
     def validatePasswordsFilesExistance(self):
@@ -94,3 +147,4 @@ class PasswordsOperator:
             return False
         else:
             return True
+

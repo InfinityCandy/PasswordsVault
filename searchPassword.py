@@ -44,7 +44,7 @@ class SearchPassword(QMainWindow):
         self.searchPasswordTxtBox.resize(165, 25)
         self.searchPasswordTxtBox.move(20, 105)
 
-        #Draws the button to store the password and associates a event to it
+        #Draws the button to store the password and associates an event to it
         searchPasswordbtn = QPushButton("Search Password", self)
         searchPasswordbtn.clicked.connect(self.searchForPassword)
         searchPasswordbtn.resize(165, 25)

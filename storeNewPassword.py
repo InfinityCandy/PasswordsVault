@@ -77,18 +77,22 @@ class StoreNewPassword(QMainWindow):
     #@return false/true: Return a boolean value, True if all the fields were filled or False otherwise
     def checkFieldsValues(self):
         validInput = False
+
         if((self.siteNameTxtBox.text() == "") or (self.emailOrUserTextBox.text() == "") or (self.passwordTextBox.text() == "") or (self.confirmPasswordTextBox.text() == "")):
             error = QMessageBox()
             error.setText("Fill all fields")
             error.exec_()
+
             return validInput
         elif(self.passwordTextBox.text() != self.confirmPasswordTextBox.text()):
             error = QMessageBox()
             error.setText("The passwords doesn't match")
             error.exec_()
+
             return validInput
         else:
             validInput = True
+            
             return validInput
             
     #Function that triggers when the store password button is clicked

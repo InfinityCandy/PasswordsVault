@@ -53,8 +53,8 @@ class PasswordsOperator:
                 fileContent = fileContent.split("\n")
 
                 #We use "-1" in our for cicle to avoid adding and empty new line to the array
-                for passwordInfo in range(len(fileContent) - 1):
-                    passwordsInfoArray.append(fileContent[passwordInfo].split("-"))
+                for i in range(len(fileContent) - 1):
+                    passwordsInfoArray.append(fileContent[i].split("-"))
                 
                 #We define the index that we are going to use to search in the passwordsInfoArray
                 #The index is defined by the value selected by the user on the searchPasswordScreen's combobox
@@ -89,6 +89,54 @@ class PasswordsOperator:
         
         else:
             return "404"
+
+    def updatePassword(self, emailUserName, newPassword):
+        if(self.validatePasswordsFilesExistance()):
+            passwordsFile = open(self.containerDirectory + self.fileName, "r")
+
+            if(passwordsFile.mode == "r"):
+                passwordsInfoArray = []
+
+                fileContent = passwordsFile.read()
+
+                #We first clean the content from white spaces
+                fileContent = fileContent.replace(" ", "")
+                #We split every password information, each one of them are stores separated by new lines
+                fileContent = fileContent.split("\n")
+
+                #We create a flag to know if we successfully updated the password
+                passwordUpdate = False
+                newFileContent = ""
+
+                #We use "-1" in our for cicle to avoid adding and empty new line to the array
+                for i in range(len(fileContent) - 1):
+                    passwordsInfoArray = fileContent[i].split("-")
+                    
+                    #We split the value of Email/UserName
+                    emailUserNameMap = passwordsInfoArray[1].split(":")
+                    #We take the second value from the element in the array, which corresponds to the "Emial/UserName" value
+                    emailUserNameValue = emailUserNameMap[1]
+
+                    #If we found any value that match, we join every element in the array where is that value, using "-" to separate each value
+                    #And qe append the password String to the array
+                    if(emailUserNameValue == emailUserName):
+                        passwordsInfoArray[2] = "Password: " + newPassword
+                        passwordUpdate = True
+
+                    #We create a new string which containes the new text in the file
+                    newFileContent = newFileContent + ("-".join(passwordsInfoArray)) + "\r\n"
+
+                #If we could update the password by finding the Email/UserName associated to it, we write a new file, overwriting the old one, with the new information
+                #And we return a status of 200
+                if(passwordUpdate):
+                    passwordsFile = open(self.containerDirectory + self.fileName, "w")
+                    passwordsFile.write(newFileContent)
+                    passwordsFile.close()
+                    
+                    return "200"
+                else:
+                    return "404"
+
                 
         
     def validatePasswordsFilesExistance(self):
@@ -99,3 +147,4 @@ class PasswordsOperator:
             return False
         else:
             return True
+

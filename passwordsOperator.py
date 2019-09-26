@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QMessageBox
-import crypt
 import os
 
 class PasswordsOperator:
@@ -16,7 +15,7 @@ class PasswordsOperator:
             os.makedirs(self.containerDirectory)
             
             passwordsFile = open(self.containerDirectory + self.fileName, "w")
-            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + crypt.crypt(password, "encrypt") + "\r\n")
+            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
             passwordsFile.close()
 
 
@@ -24,14 +23,14 @@ class PasswordsOperator:
             #If not exists then we create a new file with the first password
         elif not os.path.exists(self.containerDirectory + self.fileName):
             passwordsFile = open(self.containerDirectory + self.fileName, "w")
-            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + crypt.crypt(password, "encrypt") + "\r\n")
+            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
             passwordsFile.close()
 
         #If the file exist then we append the new password to the end of it
         else:
             #We append the new password to the password's file
             passwrodsFile = open(self.containerDirectory + self.fileName, "a+")
-            passwrodsFile.write("Site Name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + crypt.crypt(password, "encrypt") + "\r\n")
+            passwrodsFile.write("Site Name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
         
 
         succesAlert = QMessageBox()
@@ -65,7 +64,7 @@ class PasswordsOperator:
                     searchByIndex = 1
                 
                 #Variable where the searched password is going to be stored
-                passwordInfoFound = ""
+                passwordInfoFound = []
 
                 #We iterate throw every element in the passwordsInfoArray
                 for passwordInfo in passwordsInfoArray:
@@ -76,14 +75,15 @@ class PasswordsOperator:
                     arrayValue = arrayValue[1]
 
                     #If we found any value that match, we join every element in the array where is that value, using "-" to separate each value
+                    #And qe append the password String to the array
                     if(arrayValue == valueToSearch):
-                        passwordInfoFound = "-".join(passwordInfo)
+                        passwordInfoFound.append(passwordInfo)
 
-                #If the variable, where we were going to store the password once we found it, is setted to it's default vaule
+                #If the variable, where we were going to store the passwords once we found them has a length value of "0"
                 #That means that we didn't find any password that match, so we return "405"
-                if(passwordInfoFound == ""):
+                if(len(passwordInfoFound) == 0):
                     return "405"
-                #if we find the password we just return it as a string
+                #If we find the password/s we just return it as a string
                 else:
                     return passwordInfoFound
         

@@ -124,7 +124,7 @@ class PasswordsOperator:
                         passwordUpdate = True
 
                     #We create a new string which containes the new text in the file
-                    newFileContent = newFileContent + ("-".join(passwordsInfoArray)) + "\r\n"
+                    newFileContent = newFileContent + (" - ".join(passwordsInfoArray)) + "\r\n"
 
                 #If we could update the password by finding the Email/UserName associated to it, we write a new file, overwriting the old one, with the new information
                 #And we return a status of 200
@@ -166,7 +166,7 @@ class PasswordsOperator:
 
                     #For every value that doesn't match we add it to the the new file content
                     if(emailUserNameValue != emailUserName):
-                        newFileContent = newFileContent + ("-".join(passwordsInfoArray)) + "\r\n"
+                        newFileContent = newFileContent + (" - ".join(passwordsInfoArray)) + "\r\n"
                         passwordDeleted = True
 
                 

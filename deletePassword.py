@@ -15,7 +15,7 @@ class DeletePassword(QMainWindow):
         #This method is executed when the class's object is created
         self.drawWindow()
 
-    #Draws the screen to store a new password
+    #Draws the window to delete a stored password
     def drawWindow(self):
         #Draws the button to go back
         backbtn = QPushButton("Go back", self)
@@ -57,6 +57,8 @@ class DeletePassword(QMainWindow):
         self.mainScr = mainScreen.MainScreen()
         self.close()
 
+    #Check if all the fields of the form have been filled
+    #@return True/False: Returns "True" if all the fields have been filled, and "False" otherwise
     def checkFieldsValues(self):
         validInput = False
 
@@ -79,6 +81,7 @@ class DeletePassword(QMainWindow):
 
             return validInput
 
+    #Function that is called to delete a stored password, when the "delete password" button is pressed
     def deleteStoredPassword(self):
         if(self.checkFieldsValues()):
             passwordsOpert = passwordsOperator.PasswordsOperator()

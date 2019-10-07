@@ -16,7 +16,7 @@ class SearchPassword(QMainWindow):
         #This method is executed when the class's object is created
         self.drawWindow()
 
-    #Draws the screen to store a new password
+    #Draws the window to store a new password
     def drawWindow(self):
         #Draws the button to go back
         backbtn = QPushButton("Go back", self)
@@ -74,6 +74,7 @@ class SearchPassword(QMainWindow):
         self.mainScr = mainScreen.MainScreen()
         self.close()
 
+    #Function that is called to search for a specific password, when the button "Search password" is pressed
     def searchForPassword(self):
         if(self.checkFieldsValues()):
             passwordsOpert = passwordsOperator.PasswordsOperator()

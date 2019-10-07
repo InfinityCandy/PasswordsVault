@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QMessageBox
 import os
+import caesarChiper
 
 class PasswordsOperator:
 
@@ -12,13 +13,15 @@ class PasswordsOperator:
     #@param emailOrUser: Email or Username associated with that account
     #@param password: Password to be sotored
     def storePassword(self, site, emailOrUser, password):
+        chiper = caesarChiper.CaesarCipher()
+
         #We first validate is the container folder exist
         #In thtat contianer folder is where we are going to store our passwords file
         if not os.path.exists(self.containerDirectory):
             os.makedirs(self.containerDirectory)
             
             passwordsFile = open(self.containerDirectory + self.fileName, "w")
-            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
+            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + chiper.encrypt(password) + "\r\n")
             passwordsFile.close()
 
 
@@ -26,14 +29,14 @@ class PasswordsOperator:
             #If not exists then we create a new file with the first password
         elif not os.path.exists(self.containerDirectory + self.fileName):
             passwordsFile = open(self.containerDirectory + self.fileName, "w")
-            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
+            passwordsFile.write("Site name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + chiper.encrypt(password) + "\r\n")
             passwordsFile.close()
 
         #If the file exist then we append the new password to the end of it
         else:
             #We append the new password to the password's file
             passwrodsFile = open(self.containerDirectory + self.fileName, "a+")
-            passwrodsFile.write("Site Name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + password + "\r\n")
+            passwrodsFile.write("Site Name: " + site + " - Email/UserName: " + emailOrUser + " - Password: " + chiper.encrypt(password) + "\r\n")
         
 
         succesAlert = QMessageBox()
@@ -82,10 +85,12 @@ class PasswordsOperator:
                     #We take the second value from the element in the array, which corresponds to the "Site Name" or "Emial/UserName" value
                     arrayValue = arrayValue[1]
 
-                    #If we found any value that match, we join every element in the array where is that value, using "-" to separate each value
-                    #And qe append the password String to the array
+                    #If we found any value that match, we decrypt the password, and we append the password information to the list of found password
                     if(arrayValue == valueToSearch):
-                        passwordInfoFound.append(passwordInfo)
+                        chiper = caesarChiper.CaesarCipher()
+                        passwordInfoDecryptedPass = chiper.decrypt(passwordInfo)
+                        
+                        passwordInfoFound.append(passwordInfoDecryptedPass)
 
                 #If the variable, where we were going to store the passwords once we found them has a length value of "0"
                 #That means that we didn't find any password that match, so we return "405"
@@ -129,13 +134,15 @@ class PasswordsOperator:
                     #We take the second value from the element in the array, which corresponds to the "Emial/UserName" value
                     emailUserNameValue = emailUserNameMap[1]
 
-                    #If we found any value that match, we join every element in the array where is that value, using "-" to separate each value
-                    #And qe append the password String to the array
+                    #If we find any value that match we replace the second value in the array, which corresponds to the Password, with the new password
+                    #We firts encrypt the new password
+                    #And we change the "passwordUpdate" flag to write a new Passwords.txt file further in the code
                     if(emailUserNameValue == emailUserName):
-                        passwordsInfoArray[2] = "Password: " + newPassword
+                        chiper = caesarChiper.CaesarCipher()
+                        passwordsInfoArray[2] = "Password: " + chiper.encrypt(newPassword)
                         passwordUpdate = True
 
-                    #We create a new string which containes the new text in the file
+                    #We create a new string which will contain the new Passwords.txt file text
                     newFileContent = newFileContent + (" - ".join(passwordsInfoArray)) + "\r\n"
 
                 #If we could update the password by finding the Email/UserName associated to it, we write a new file, overwriting the old one, with the new information

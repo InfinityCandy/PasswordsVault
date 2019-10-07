@@ -7,7 +7,10 @@ class PasswordsOperator:
         self.containerDirectory = "storedPasswords/"
         self.fileName = "Passwords.txt"
 
-    #Function that stores a new password into the "Passwords.txt" file
+    #Stores a new password into the "Passwords.txt" file, the file to be stored are: Site name, Email/UserName (could be any of both) and the password associated to that Email/UserName
+    #@param site: Site's name which that account belongs
+    #@param emailOrUser: Email or Username associated with that account
+    #@param password: Password to be sotored
     def storePassword(self, site, emailOrUser, password):
         #We first validate is the container folder exist
         #In thtat contianer folder is where we are going to store our passwords file
@@ -37,6 +40,11 @@ class PasswordsOperator:
         succesAlert.setText("Password Stored Successfully")
         succesAlert.exec_()
 
+    #Function that searchs for any match of the Email/UserName or Site Name in the "Passwords.txt" file
+    #@param searchByValue: Value used to search the password, could be the values "Email/UserName" or "Site Name"
+    #@param valueToSearch: Value to be searched, could be an Email/UserName or the name of a Site
+    #return passwordInfoFound or a String: If there is no stored passwords the method returns "404", if no password is found the method returns "403"
+    #If we find one or more matchs we return an array with all of them
     def searchPassword(self, searchByValue, valueToSearch):
         #If the directory or file where the passwords are stored doesn't exist we return "404"
         if (self.validatePasswordsFilesExistance()):
@@ -90,6 +98,10 @@ class PasswordsOperator:
         else:
             return "404"
 
+    #Update an existing password in the Passwords.txt file, using the Email/UserName as reference
+    #@param emailUserName: Email or Username which we want to update the associated password
+    #@param newPassword: New password value that's going to replace the old one associted with the given Email/Username
+    #@param String: A string that can be "200" which means that the password has been updated, "404" which means that we couldn't find the given Email/Username
     def updatePassword(self, emailUserName, newPassword):
         if(self.validatePasswordsFilesExistance()):
             passwordsFile = open(self.containerDirectory + self.fileName, "r")
@@ -137,6 +149,9 @@ class PasswordsOperator:
                 else:
                     return "404"
 
+    #Delete an existin password in the Passwords.txt file, using the Email/Username as reference to search for it
+    #@param emailUserName: Email or Username used for searching the desire password and next delete it
+    #@return String: An String tha can be "200" which means that the password has been deleted or "404" which means that there is not match for the given "Email/Username"
     def deletePassword(self, emailUserName):
         if(self.validatePasswordsFilesExistance()):
             passwordsFile = open(self.containerDirectory + self.fileName, "r")
@@ -170,7 +185,7 @@ class PasswordsOperator:
                         passwordDeleted = True
 
                 
-                #If we could update the password by finding the Email/UserName associated to it, we write a new file, overwriting the old one, with the new information
+                #If we could delete the password by finding the Email/UserName associated to it, we write a new file, overwriting the old one, with the new information
                 #And we return a status of 200
                 if(passwordDeleted):
                     passwordsFile = open(self.containerDirectory + self.fileName, "w")
@@ -181,7 +196,7 @@ class PasswordsOperator:
                 else:
                     return "404"
 
-                
+    #Validates the existance of the "Passwords.txt" file and its container folder
     def validatePasswordsFilesExistance(self):
         #If the directory or file where the passwords are stored doesn't exist we return "404"
         if not os.path.exists(self.containerDirectory):

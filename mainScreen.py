@@ -45,25 +45,28 @@ class MainScreen(QMainWindow):
         self.setWindowTitle('PasswordsVault')    
         self.show()
 
-    #The function related to "Store new password" button
+    #Function related to "Store new password" button
     def storePassword(self):
         self.storeNewPasswordScreen = storeNewPassword.StoreNewPassword()
 
         #Close the current window
         self.close()
 
+    #Function realated to "Search password" button
     def searchForPassword(self):
         self.searchPasswordScreen = searchPassword.SearchPassword()
 
         #Close the current window
         self.close()
 
+    #Function related to "Update password" button
     def updateStoredPassword(self):
         self.updateStoredPasswordScreen = updatePassword.UpdatePassword()
 
         #Close the current window
         self.close()
 
+    #Function related to "Delete password" button
     def deleteStoredPassword(self):
         self.deleteStoredPasswordScreen = deletePassword.DeletePassword()
 

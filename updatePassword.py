@@ -70,7 +70,7 @@ class UpdatePassword(QMainWindow):
 
         #Draws the window
         self.setGeometry(200, 200, self.windowWidth, self.windowHeigh)
-        self.setWindowTitle("Delete Password")    
+        self.setWindowTitle("Update Password")    
         self.show()
 
     #Function that allows the user to go back to the main screen
@@ -78,6 +78,8 @@ class UpdatePassword(QMainWindow):
         self.mainScr = mainScreen.MainScreen()
         self.close()
 
+    #Check if all the fields of the form have been filled
+    #@return True/False: Returns "True" if all the fields have been filled, and "False" otherwise
     def checkFieldsValues(self):
         validInput = False
 
@@ -106,6 +108,7 @@ class UpdatePassword(QMainWindow):
 
             return validInput
 
+    #Function that is called to update a stored password, when the "Update password" button is pressed
     def updateStoredPassword(self):
         if(self.checkFieldsValues()):
             passwordsOpert = passwordsOperator.PasswordsOperator()

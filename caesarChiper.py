@@ -14,7 +14,7 @@ class CaesarCipher:
             letterASCIICode = ord(letter)
             newLetterASCIICode = letterASCIICode + self.key
 
-            newLetterASCIICode = self.validateEncryptASCIICode(newLetterASCIICode)
+            newLetterASCIICode = self.encryptASCIICodeAdjuter(newLetterASCIICode)
         
             encryptedPasswordArray.append(chr(newLetterASCIICode))
             
@@ -35,7 +35,7 @@ class CaesarCipher:
             letterASCIICode = ord(letter)
             newLetterASCIICode = letterASCIICode - self.key
 
-            newLetterASCIICode = self.validateDecryptASCIICode(newLetterASCIICode)
+            newLetterASCIICode = self.encryptASCIICodeAdjuter(newLetterASCIICode)
 
             decryptedPasswordArray.append(chr(newLetterASCIICode))
 
@@ -48,7 +48,7 @@ class CaesarCipher:
     #Validates an ensures that a lleter's ASCII code doesn't excced the ASCII code available values for UTF-8 (32 - 126) during ecryptation
     #@param ASCIICode: An ASCII code value
     #@return ASCIICode: A valid ASCII code between 32 and 126
-    def validateEncryptASCIICode(self, ASCIICode):
+    def encryptASCIICodeAdjuter(self, ASCIICode):
         if(ASCIICode > 126):
             return ((ASCIICode - 126) + 32)
         else:
@@ -57,7 +57,7 @@ class CaesarCipher:
     #Validates an ensures that a lleter's ASCII code doesn't excced the ASCII code available values for UTF-8 (32 - 126) during decryptation
     #@param ASCIICode: An ASCII code value
     #@return ASCIICode: A valid ASCII code between 32 and 126
-    def validateDecryptASCIICode(self, ASCIICode):
+    def decryptASCIICodeAdjuster(self, ASCIICode):
         if(ASCIICode < 32):
             return (126 - (32 - ASCIICode))
         else:
